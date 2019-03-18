@@ -21,7 +21,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        for($i=0; $i>10; $i++) {
+        for($i=0; $i<10; $i++) {
             $product = new Product();
             $product->setName('Product' . $i);
             $product->setPrice(rand(10,50));
@@ -35,11 +35,9 @@ class AppFixtures extends Fixture
         $user->setRoles([
             'ROLE_ADMIN'
         ]);
-
         $user->setPassword($this->encoder->encodePassword($user, 'password'));
 
         $manager->persist($user);
-
         $manager->flush();
     }
 }
