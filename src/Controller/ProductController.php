@@ -73,8 +73,32 @@ class ProductController extends FOSRestController
 
         $productRepository  = $manager->getRepository(Product::class);
         $products           = $productRepository->findAll();
-
-
     }
 
+    /**
+     * @FOSRest\Delete("/api/products/{id}")
+     * @param ObjectManager $manager
+     * @param $id
+     * @return Response
+     */
+    public function deleteProductAction(ObjectManager $manager, $id)
+    {
+        $productRepository  = $manager->getRepository(Product::class);
+        $product            = $productRepository->find($id);
+
+        if($product instanceof Product) {
+            $manager->remove($product);
+            $manager->flush();
+
+            return $this->json([
+                "success" => true
+            ], Response::HTTP_OK);
+        }
+        else {
+            return $this->json([
+                'success' => false,
+                'error'   => 'Product not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
 }
