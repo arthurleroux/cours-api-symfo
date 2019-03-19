@@ -6,7 +6,9 @@ use App\Entity\Product;
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends FOSRestController
 {
@@ -35,13 +37,44 @@ class ProductController extends FOSRestController
         $product            = $productRepository->find($id);
 
         if (!$product instanceof Product) {
-           $this->json([
+           return $this->json([
                'success' => false,
                'error'   => 'Product not found'
            ], Response::HTTP_NOT_FOUND);
         }
+        else {
+            return $this->json($product, Response::HTTP_OK);
+        }
+    }
 
-        return $this->json($product, Response::HTTP_OK);
+    /**
+     * @FOSRest\Post("/api/products")
+     * @ParamConverter("product", converter="fos_rest.request_body")
+     * @param Product $product
+     * @param ObjectManager $manager
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postProductAction(Product $product, ObjectManager $manager, ValidatorInterface $validator)
+    {
+        $errors = $validator->validate($product);
+
+        if(!count($errors)) {
+            $manager->persist($product);
+            $manager->flush();
+
+            return $this->json($product, Response::HTTP_CREATED);
+        }
+        else {
+            return $this->json([
+                'success' => false,
+                'error'   => $errors[0]->getMessage(). ' (' . $errors[0]->getPropertyPath().')'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $productRepository  = $manager->getRepository(Product::class);
+        $products           = $productRepository->findAll();
+
+
     }
 
 }

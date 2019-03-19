@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
@@ -11,7 +12,7 @@ class Product
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -23,7 +24,9 @@ class Product
     private $name;
 
     /**
+     * @Assert\NotBlank
      * @Assert\GreaterThan(0)
+     * @Assert\Type("float")
      * @ORM\Column(type="float")
      */
     private $price;
