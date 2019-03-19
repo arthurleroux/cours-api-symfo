@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -102,9 +103,11 @@ class ProductController extends FOSRestController
 
     /**
      * @FOSRest\Put("/api/products/{id}")
-     * @param ObjectManager $manager
+     * @param Request $request
      * @param $id
-     * @return Response
+     * @param ObjectManager $manager
+     * @param ValidatorInterface $validator
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function updateProductAction(Request $request, ObjectManager $manager, $id, ValidatorInterface $validator)
     {
