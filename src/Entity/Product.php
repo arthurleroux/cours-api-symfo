@@ -17,11 +17,13 @@ class Product
     private $id;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @Assert\GreaterThan(0)
      * @ORM\Column(type="float")
      */
     private $price;
