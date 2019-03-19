@@ -70,9 +70,6 @@ class ProductController extends FOSRestController
                 'error'   => $errors[0]->getMessage(). ' (' . $errors[0]->getPropertyPath().')'
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        $productRepository  = $manager->getRepository(Product::class);
-        $products           = $productRepository->findAll();
     }
 
     /**
